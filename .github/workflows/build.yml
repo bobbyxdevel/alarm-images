@@ -13,8 +13,8 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt upgrade
-          sudo apt install parted wget dosfstools zip
+          sudo apt upgrade -y
+          sudo apt install -y parted wget dosfstools zip
 
       # Build Images
       # Note: Uploading zip file artifact will be double zip. Do not delete .img file
@@ -47,13 +47,12 @@ jobs:
           sudo cp rpi-aarch64-archlinux.img rpi-4-aarch64-archlinux.img
           mkdir root
           loopdev=$(sudo losetup --find --show rpi-4-aarch64-archlinux.img)
-          rootdev=$(sudo ls "${loopdev}"*2)
+          rootdev=$(sudo ls "${loopdev}"p2 || sudo ls "${loopdev}"*2)
           sudo mount "${rootdev}" root
           sudo sed -i 's/mmcblk0/mmcblk1/g' root/etc/fstab
           sudo umount root
           sudo rmdir root
           zip -v rpi-4-aarch64-archlinux.img.zip rpi-4-aarch64-archlinux.img
-
 
       # Upload artifacts
 
